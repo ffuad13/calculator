@@ -4,15 +4,6 @@ const updateScreen = (number) => {
   calculatorScreen.value = number;
 };
 
-const numbers = document.querySelectorAll(".number");
-
-numbers.forEach((number) => {
-  number.addEventListener("click", (event) => {
-    inputNumber(event.target.value);
-    updateScreen(currentNumber);
-  });
-});
-
 let prevNumber = "";
 let calculationOperator = "";
 let currentNumber = "0";
@@ -25,11 +16,11 @@ const inputNumber = (number) => {
   }
 };
 
-const operators = document.querySelectorAll(".operator");
-
-operators.forEach((operator) => {
-  operator.addEventListener("click", (event) => {
-    inputOperator(event.target.value);
+const numbers = document.querySelectorAll(".number");
+numbers.forEach((number) => {
+  number.addEventListener("click", (event) => {
+    inputNumber(event.target.value);
+    updateScreen(prevNumber + calculationOperator + currentNumber);  //update di akhir
   });
 });
 
@@ -41,11 +32,13 @@ const inputOperator = (operator) => {
   currentNumber = "0";
 };
 
-const equalSign = document.querySelector(".equal-sign");
-
-equalSign.addEventListener("click", () => {
-  calculate();
-  updateScreen(currentNumber);
+const operators = document.querySelectorAll(".operator");
+operators.forEach((operator) => {
+  operator.addEventListener("click", (event) => {
+    const {value} = event.target
+    inputOperator(value);
+    updateScreen(prevNumber + value)
+  });
 });
 
 const calculate = () => {
@@ -57,7 +50,7 @@ const calculate = () => {
     case "-":
       result = parseFloat(prevNumber) - parseFloat(currentNumber);
       break;
-    case "*":
+    case "x":
       result = parseFloat(prevNumber) * parseFloat(currentNumber);
       break;
     case "/":
@@ -70,10 +63,9 @@ const calculate = () => {
   calculationOperator = "";
 };
 
-const clearBtn = document.querySelector(".all-clear");
-
-clearBtn.addEventListener("click", () => {
-  clearAll();
+const equalSign = document.querySelector(".equal-sign");
+equalSign.addEventListener("click", () => {
+  calculate();
   updateScreen(currentNumber);
 });
 
@@ -83,10 +75,9 @@ const clearAll = () => {
   currentNumber = "0";
 };
 
-const decimal = document.querySelector(".decimal");
-
-decimal.addEventListener("click", (event) => {
-  inputDecimal(event.target.value);
+const clearBtn = document.querySelector(".all-clear");
+clearBtn.addEventListener("click", () => {
+  clearAll();
   updateScreen(currentNumber);
 });
 
@@ -96,3 +87,9 @@ inputDecimal = (dot) => {
   }
   currentNumber += dot;
 };
+
+const decimal = document.querySelector(".decimal");
+decimal.addEventListener("click", (event) => {
+  inputDecimal(event.target.value);
+  updateScreen(currentNumber);
+});
